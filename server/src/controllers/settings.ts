@@ -14,9 +14,10 @@ export default ({ strapi }: { strapi: Core.Strapi }) => ({
   async setSettings(ctx) {
     const settingService = strapi.plugin('drag-drop-content-types-strapi5').service('settings');
     const { body } = ctx.request;
+    const settings = { body };
 
     try {
-      await settingService.setSettings(body);
+      await settingService.setSettings(settings);
       ctx.body = await settingService.getSettings();
     } catch (err) {
       ctx.throw(500, err);
