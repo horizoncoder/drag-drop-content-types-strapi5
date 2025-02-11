@@ -49,7 +49,7 @@ Create or modify your `config/plugins.ts` file:
 
 ```typescript
 export default () => ({
-  'drag-drop-content-types': {
+  'drag-drop-content-types-strapi5': {
     enabled: true,
   },
 });
