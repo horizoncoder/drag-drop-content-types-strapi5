@@ -6,15 +6,7 @@ export default {
       path: '/settings',
       handler: 'settings.getSettings',
       config: {
-        policies: [
-          'strapi::isAuthenticatedAdmin',
-          {
-            name: 'admin::hasPermissions',
-            config: {
-              permissions: ['plugin::drag-drop-content-types-strapi5.read'],
-            },
-          },
-        ],
+        policies: [],
       },
     },
     {
@@ -22,15 +14,7 @@ export default {
       path: '/settings',
       handler: 'settings.setSettings',
       config: {
-        policies: [
-          'strapi::isAuthenticatedAdmin',
-          {
-            name: 'admin::hasPermissions',
-            config: {
-              permissions: ['plugin::drag-drop-content-types-strapi5.settings.update'],
-            },
-          },
-        ],
+        policies: [],
       },
     },
   ],
