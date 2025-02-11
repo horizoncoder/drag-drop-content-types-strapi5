@@ -70,18 +70,6 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
         }
       }
 
-      // Update the publishedAt field of the main entry
-      await strapi
-        .plugin('content-manager')
-        .service('content-types')
-        .update({
-          model: contentType,
-          entry: {
-            id: update.id,
-            publishedAt: new Date(),
-          },
-        });
-
       // Trigger webhook listener for updated entry
       //see: https://forum.strapi.io/t/trigger-webhook-event-from-api/35919/5
       if (shouldTriggerWebhooks) {
