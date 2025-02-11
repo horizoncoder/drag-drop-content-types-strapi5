@@ -10,7 +10,7 @@ const BatchUpdateRequestSchema = z.object({
 
 const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
   async welcome(ctx) {
-    const dragdropService = strapi.plugin('drag-drop-content-types').service('dragdrop');
+    const dragdropService = strapi.plugin('drag-drop-content-types-strapi5').service('dragdrop');
 
     try {
       ctx.body = await dragdropService.getWelcomeMessage();
@@ -20,7 +20,7 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async sortIndex(ctx) {
-    const dragdropService = strapi.plugin('drag-drop-content-types').service('dragdrop');
+    const dragdropService = strapi.plugin('drag-drop-content-types-strapi5').service('dragdrop');
 
     try {
       ctx.body = await dragdropService.sortIndex(
@@ -36,8 +36,8 @@ const controller = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async batchUpdate(ctx) {
-    const settingService = strapi.plugin('drag-drop-content-types').service('settings');
-    const dragdropService = strapi.plugin('drag-drop-content-types').service('dragdrop');
+    const settingService = strapi.plugin('drag-drop-content-types-strapi5').service('settings');
+    const dragdropService = strapi.plugin('drag-drop-content-types-strapi5').service('dragdrop');
 
     try {
       const config: PluginSettingsResponse = await settingService.getSettings();
