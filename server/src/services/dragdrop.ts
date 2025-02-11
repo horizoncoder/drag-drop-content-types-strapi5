@@ -2,13 +2,40 @@ import type { Core } from '@strapi/strapi';
 import type * as StrapiTypes from '@strapi/types/dist';
 import { PluginSettingsResponse, RankUpdate } from '../../../typings';
 
+/**
+ * @typedef {object} DragDropService
+ * @property {() => { body: string }} getWelcomeMessage - Returns a welcome message.
+ * @property {(contentType: StrapiTypes.UID.CollectionType, start: number, limit: number, locale: string, rankFieldName: string) => Promise<any>} sortIndex - Retrieves sorted index data for a content type.
+ * @property {(config: PluginSettingsResponse, updates: RankUpdate[], contentType: StrapiTypes.UID.CollectionType) => Promise<any>} batchUpdate - Updates the rank of multiple entries in a content type.
+ */
+
+/**
+ * Drag Drop service.
+ * @param {object} params - The parameters object.
+ * @param {Core.Strapi} params.strapi - The Strapi instance.
+ * @returns {DragDropService}
+ */
 const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
+  /**
+   * Returns a welcome message.
+   * @returns {{ body: string }}
+   */
   getWelcomeMessage() {
     return {
       body: 'Welcome to Strapi 🚀',
     };
   },
 
+  /**
+   * Retrieves sorted index data for a content type.
+   * @async
+   * @param {StrapiTypes.UID.CollectionType} contentType - The content type UID.
+   * @param {number} start - The start index.
+   * @param {number} limit - The limit of results.
+   * @param {string} locale - The locale.
+   * @param {string} rankFieldName - The field name to sort by.
+   * @returns {Promise<any>}
+   */
   async sortIndex(
     contentType: StrapiTypes.UID.CollectionType,
     start: number,
@@ -32,9 +59,12 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   /**
-   *
-   * @param {RankUpdate[]} updates
-   * @param {StrapiTypes.UID.CollectionType} contentType
+   * Updates the rank of multiple entries in a content type.
+   * @async
+   * @param {PluginSettingsResponse} config - The plugin settings.
+   * @param {RankUpdate[]} updates - The array of rank updates.
+   * @param {StrapiTypes.UID.CollectionType} contentType - The content type UID.
+   * @returns {Promise<any>}
    */
   async batchUpdate(
     config: PluginSettingsResponse,
