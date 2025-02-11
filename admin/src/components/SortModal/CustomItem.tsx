@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from "@strapi/design-system";
 import { Drag } from "@strapi/icons";
-import { CSSProperties, forwardRef, HTMLAttributes } from "react"
+import { CSSProperties, forwardRef, HTMLAttributes, useMemo } from "react"
 
 export type TItem = {
     id: number
@@ -21,6 +21,8 @@ const CustomItem = forwardRef<HTMLDivElement, CustomItemProps>(
             cursor: isDragging ? "grabbing" : "grab",
             lineHeight: "0.5",
             transform: isDragging ? "scale(1.05)" : "scale(1)",
+            willChange: 'transform, box-shadow',
+            boxShadow: isDragging ? '0 5px 10px rgba(0, 0, 0, 0.2)' : 'none',
             ...style
         }
 
@@ -30,8 +32,8 @@ const CustomItem = forwardRef<HTMLDivElement, CustomItemProps>(
                 ellipsisStr
                 : str;
 
-        item.title = ellipsis(item.title ?? "", 30);
-        item.subtitle = ellipsis(item.subtitle ?? "", 30);
+        const title = useMemo(() => ellipsis(item.title ?? "", 30), [item.title]);
+        const subtitle = useMemo(() => ellipsis(item.subtitle ?? "", 30), [item.subtitle]);
 
         return (
             <div ref={ref} style={styles} {...props}>
@@ -48,8 +50,8 @@ const CustomItem = forwardRef<HTMLDivElement, CustomItemProps>(
                         </Grid.Item>
                         <Grid.Item col={10} s={12}>
                             <Typography>
-                                {item.title}
-                                {item.subtitle}
+                                {title}
+                                {subtitle}
                             </Typography>
                         </Grid.Item>
                     </Grid.Root>

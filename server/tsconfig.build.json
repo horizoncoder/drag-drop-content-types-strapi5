@@ -2,9 +2,5 @@
   "extends": "./tsconfig",
   "include": ["./src"],
   "exclude": ["**/*.test.ts"],
-  "compilerOptions": {
-    "rootDir": "../",
-    "baseUrl": ".",
-    "outDir": "./dist"
-  }
+  "compilerOptions": { "lib": ["ES2015"], "rootDir": "../", "baseUrl": ".", "outDir": "./dist" }
 }

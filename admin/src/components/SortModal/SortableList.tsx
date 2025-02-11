@@ -38,8 +38,6 @@ const SortableList = ({ data, onShowMore, hasMore, settings, onSortEnd }: Sortab
     }
     const defaultItems = data.map(x => convertDataItem(x));
     const [items, setItems] = useState<TItem[]>(defaultItems);
-    if (items.length !== defaultItems.length)
-        setItems(defaultItems);
 
     // for drag overlay
     const [activeItem, setActiveItem] = useState<TItem>();
