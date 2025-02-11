@@ -55,10 +55,13 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
 
       const { localizations, ...origin } = allLocalizations;
       for (const entry of [origin, ...localizations]) {
+        const wasPublished = entry.publishedAt !== null;
+
         const updatedEntry = await strapi.db.query(contentType).update({
           where: { id: entry.id },
           data: {
             [sortFieldName]: update.rank,
+            publishedAt: wasPublished ? new Date() : entry.publishedAt,
           },
         });
 
@@ -66,6 +69,18 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
           results.push(updatedEntry);
         }
       }
+
+      // Update the publishedAt field of the main entry
+      await strapi
+        .plugin('content-manager')
+        .service('content-types')
+        .update({
+          model: contentType,
+          entry: {
+            id: update.id,
+            publishedAt: new Date(),
+          },
+        });
 
       // Trigger webhook listener for updated entry
       //see: https://forum.strapi.io/t/trigger-webhook-event-from-api/35919/5
