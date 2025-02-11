@@ -2,6 +2,9 @@
   "name": "@yunusemrejs/drag-drop-content-types-strapi5",
   "version": "1.0.0",
   "description": "A powerful Strapi plugin that enables intuitive drag-and-drop sorting of content types with real-time updates, optimized performance, and a seamless user experience.",
+  "publishConfig": {
+    "access": "public"
+  },
   "strapi": {
     "kind": "plugin",
     "name": "drag-drop-content-types-strapi5",
