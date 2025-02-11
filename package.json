@@ -1,13 +1,21 @@
 {
   "name": "@yunusemrejs/drag-drop-content-types-strapi5",
-  "version": "0.5.1",
-  "description": "This plugin add a drag and droppable list that allows you to sort content type entries.",
+  "version": "1.0.0",
+  "description": "A powerful Strapi plugin that enables intuitive drag-and-drop sorting of content types with real-time updates, optimized performance, and a seamless user experience.",
   "strapi": {
     "kind": "plugin",
-    "name": "drag-drop-content-types",
+    "name": "drag-drop-content-types-strapi5",
     "displayName": "Drag Drop Content Types",
-    "description": "This plugin add a drag and droppable list that allows you to sort content type entries."
+    "description": "Enhance your Strapi CMS with smooth drag-and-drop content type sorting capabilities"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yunusemrejs/drag-drop-content-types-strapi5"
+  },
+  "bugs": {
+    "url": "https://github.com/yunusemrejs/drag-drop-content-types-strapi5"
+  },
+  "homepage": "https://github.com/yunusemrejs/drag-drop-content-types-strapi5#readme",
   "keywords": [
     "strapi",
     "plugin",
@@ -18,7 +26,17 @@
     "drag drop content types",
     "content types",
     "sort",
-    "order"
+    "order",
+    "cms",
+    "content management",
+    "headless cms",
+    "content ordering",
+    "sorting plugin",
+    "dnd-kit",
+    "strapi v5",
+    "react",
+    "typescript",
+    "ui components"
   ],
   "license": "MIT",
   "type": "commonjs",

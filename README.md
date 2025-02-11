@@ -1,70 +1,144 @@
 <div align="center">
   <img src="https://user-images.githubusercontent.com/37687705/192227260-db082018-947a-4166-a3f4-983e1024dd59.png" width="20%">
-  <h1>Strapi plugin drag-drop-content-types</h1>
+  <h1>Strapi Drag Drop Content Types Plugin</h1>
+  <p>A powerful and intuitive drag-and-drop sorting solution for Strapi v5 content types</p>
+
+[![npm version](https://img.shields.io/npm/v/@yunusemrejs/drag-drop-content-types-strapi5)](https://www.npmjs.com/package/@yunusemrejs/drag-drop-content-types-strapi5)
+[![npm downloads](https://img.shields.io/npm/dm/@yunusemrejs/drag-drop-content-types-strapi5)](https://www.npmjs.com/package/@yunusemrejs/drag-drop-content-types-strapi5)
+[![GitHub issues](https://img.shields.io/github/issues/yunusemrejs/drag-drop-content-types-strapi5)](https://github.com/yunusemrejs/drag-drop-content-types-strapi5/issues)
+[![GitHub stars](https://img.shields.io/github/stars/yunusemrejs/drag-drop-content-types-strapi5)](https://github.com/yunusemrejs/drag-drop-content-types-strapi5/stargazers)
+[![License](https://img.shields.io/npm/l/@yunusemrejs/drag-drop-content-types-strapi5)](https://github.com/yunusemrejs/drag-drop-content-types-strapi5/blob/main/LICENSE)
+
 </div>
+
+## ✨ Features
 
 ![dragdropcrop](https://user-images.githubusercontent.com/37687705/212884821-356ec68c-b71a-4b89-9e99-8a625f84cfbe.gif)
 
-Inspired by the [Drag-Drop-Content-Type Strapi 4 plugin](https://github.com/plantagoIT/strapi-drag-drop-content-type-plugin).
-Drag-drop feature completely rewritten to use dndkit because react-sortable-hoc is deprecated and not compatible with React 18.
+- 🚀 Built for Strapi v5 with TypeScript support
+- ⚡️ High-performance drag-and-drop using dnd-kit
+- 📱 Responsive design for both desktop and mobile
+- 🎨 Smooth animations and visual feedback
+- 🔒 Built-in permission system integration
+- 🌐 Internationalization support
+- 🔄 Real-time content order updates
+- 📦 Easy installation and configuration
 
-## ⏳ Installation
+Originally inspired by the [Drag-Drop-Content-Type Strapi 4 plugin](https://github.com/plantagoIT/strapi-drag-drop-content-type-plugin), this plugin has been completely rewritten using the modern dnd-kit library to ensure compatibility with React 18 and provide better performance.
 
-Install with NPM.
+## 🚀 Quick Start
+
+### Installation
 
 ```bash
-npm i @yunusemrejs/drag-drop-content-types-strapi5
-```
+# Using npm
+npm install @yunusemrejs/drag-drop-content-types-strapi5
 
-Install with Yarn.
-
-```bash
+# Using yarn
 yarn add @yunusemrejs/drag-drop-content-types-strapi5
+
+# Using pnpm
+pnpm add @yunusemrejs/drag-drop-content-types-strapi5
 ```
 
-## 🔧 Configuration
+## ⚙️ Configuration
 
-### In your config
+### Step 1: Enable the Plugin
 
-1. Add the following to your `config/plugins.ts` file. Create the file, if it doesn't exist.
+Create or modify your `config/plugins.ts` file:
 
-```js
+```typescript
 export default () => ({
-  // ...
   'drag-drop-content-types': {
     enabled: true,
   },
 });
 ```
 
-2. Run `npm run build` and restart the app using `npm run develop`.
+### Step 2: Build and Restart
 
-### In the app
-
-1. Go to `Settings` → `Drag Drop Content Type` → `Configuration`.
-2. Specify the `Rank Field Name` used for sorting or leave the default field name `rank`.
-3. Add a `Number` field with `Name: myRankFieldName` and `Number format: integer` to the sortable _ContentType_.
-4. Configure the view of your _ContentType_ by adding `Default sort attribute → rank` and `Default sort order → ASC` to update the view after dragging.
-5. If needed: grant permissions for the `rank` field to your roles.
-
-#### Hints
-
-- You can set a `title` value that will be displayed in the menu instead of the default field.
-- A second field can be displayed in the menu via the `subtitle` setting. It can be either a string-like field or an object such as a relation, that has a `title` field as configured in the settings.
-- You can enable webhooks to trigger something after updating the order.
-
-### In your frontend
-
-You can make a request in the frontend to get the ordered items. In this example the _ContentType_ is called `Foo` and ordered via the `rank` field.
-
-```
-http://localhost:1337/api/foo?sort=rank:asc
+```bash
+npm run build
+npm run develop
 ```
 
-## 🤝 Contribute
+## 🛠️ Setup Guide
 
-Feel free to fork and make pull requests to this plugin. All input is welcome - thanks for all contributions so far!
+### Content Type Configuration
 
-## ⭐️ Support
+1. Navigate to `Settings` → `Drag Drop Content Type` → `Configuration`
+2. Configure the following settings:
 
-I you like this project, please give it a star ⭐️. Maybe this will help it getting integrated to strapi's core some day 😊.
+#### Basic Setup
+
+- Set the `Rank Field Name` (default: `rank`)
+- Add an integer field to your Content Type with the specified rank field name
+- Set default sorting in Content Type settings:
+  - `Default sort attribute`: Your rank field
+  - `Default sort order`: ASC
+
+#### Advanced Options
+
+- **Display Settings**
+
+  ```typescript
+  {
+    title: 'name',           // Field to use as title
+    subtitle: 'description', // Optional: Field to show as subtitle
+    mainField: 'title'      // Optional: Fallback field
+  }
+  ```
+
+- **Webhook Integration**
+  Enable webhooks to trigger external systems when order changes
+
+#### Permissions
+
+Grant appropriate permissions in Settings → Users & Permissions → Roles:
+
+- Read permission for content type
+- Update permission for the rank field
+
+## 📡 API Usage
+
+### REST API
+
+Fetch ordered content:
+
+```bash
+# Basic sorting
+GET /api/{content-type}?sort=rank:asc
+
+# With pagination
+GET /api/{content-type}?sort=rank:asc&pagination[page]=1&pagination[pageSize]=25
+
+# With relations
+GET /api/{content-type}?sort=rank:asc&populate=*
+```
+
+### GraphQL
+
+```graphql
+query {
+  contentType(sort: "rank:asc") {
+    data {
+      id
+      attributes {
+        title
+        rank
+      }
+    }
+  }
+}
+```
+
+## 💪 Support
+
+- Star ⭐️ the project
+- [Submit issues](https://github.com/yunusemrejs/drag-drop-content-types-strapi5/issues)
+- Share with your network
+- Consider [sponsoring](https://github.com/sponsors/yunusemrejs)
+
+## 📄 License
+
+MIT © [Yunus Emre Kara](LICENSE)
