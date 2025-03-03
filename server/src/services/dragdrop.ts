@@ -50,7 +50,7 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
       limit: limit,
       locale: locale,
     };
-    indexData.sort[rankFieldName] = 'asc';
+    indexData.sort[rankFieldName] = 'desc';
     try {
       return await strapi.documents(contentType).findMany(indexData);
     } catch (err) {
