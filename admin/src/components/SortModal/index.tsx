@@ -155,7 +155,7 @@ const SortModal = () => {
 
         // TODO: remove this line and get pagination from elsewhere
         const { data } = await get<ContentTypeResponse>(
-          `/content-manager/collection-types/${contentTypePath}?sort=${settings.rank}:asc&page=${currentPage}&pageSize=${pageSize}&locale=${locale}`
+          `/content-manager/collection-types/${contentTypePath}?sort=${settings.rank}:desc&page=${currentPage}&pageSize=${pageSize}&locale=${locale}`
         );
         setPagination(data.pagination);
       }
