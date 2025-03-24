@@ -103,6 +103,7 @@ const SortableList = ({ data, onShowMore, hasMore, settings, onSortEnd }: Sortab
         <Button size="S" disabled={hasMore ? true : false} onClick={onShowMore}>
           {formatMessage({ id: getTrad('plugin.settings.sortableList.showMore') })}
         </Button>
+        <p>Modified</p>
       </Box>
     </div>
   );

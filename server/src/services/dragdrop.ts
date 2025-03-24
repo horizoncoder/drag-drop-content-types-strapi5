@@ -28,11 +28,9 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
       for (let i = 0; i < parts.length - 1; i++) {
         const part = isNaN(Number(parts[i])) ? parts[i] : Number(parts[i]);
         const nextPartIsIndex = !isNaN(Number(parts[i + 1]));
-
         if (current[part] === undefined) {
           current[part] = nextPartIsIndex ? [] : {};
         }
-
         current = current[part];
       }
 
@@ -43,10 +41,8 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
       current[lastPart] = value;
     }
 
-
     try {
       const queryString = url.split('?')[1] || '';
-      //@ts-ignore
       const urlParams = new URLSearchParams(queryString);
 
       let filters: any = {};
@@ -70,6 +66,17 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
         }
       }
 
+      // special processing only for project.project
+      if (
+        contentType === 'api::project.project' &&   !filters.$and?.some(
+          (cond: any) => cond.artist?.title?.$eq
+        )
+      ) {
+        return {
+          filters
+        };
+      }
+
       const start = (page - 1) * pageSize;
       const limit = pageSize;
       const [sortField, sortDir] = sortValue.split(':');
@@ -84,8 +91,7 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
       };
 
       // @ts-ignore
-      const data = await strapi.documents(contentType).findMany(indexData);
-      return data
+      return await strapi.documents(contentType).findMany(indexData);
     } catch (err) {
       strapi.log.error('Error in sortIndex:', err);
       return {};
