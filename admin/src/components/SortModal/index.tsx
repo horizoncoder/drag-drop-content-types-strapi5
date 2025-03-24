@@ -111,8 +111,7 @@ const SortModal = () => {
         contentType: contentTypePath,
         rankFieldName: settings.rank,
         start: Math.max(0, (currentPage - 1) * pageSize - noEntriesFromNextPage),
-        limit:100,
-        test:"dd",
+        limit:30,
         locale: locale,
       };
       const results = await post<GetPageEntriesResponse[]>(
