@@ -27,9 +27,12 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
       let current = obj;
       for (let i = 0; i < parts.length - 1; i++) {
         const part = isNaN(Number(parts[i])) ? parts[i] : Number(parts[i]);
+        const nextPartIsIndex = !isNaN(Number(parts[i + 1]));
+
         if (current[part] === undefined) {
-          current[part] = typeof parts[i + 1] === 'number' ? [] : {};
+          current[part] = nextPartIsIndex ? [] : {};
         }
+
         current = current[part];
       }
 
@@ -39,6 +42,7 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
 
       current[lastPart] = value;
     }
+
 
     try {
       const queryString = url.split('?')[1] || '';
@@ -61,7 +65,8 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
         } else if (key === 'locale') {
           locale = value;
         } else if (key.startsWith('filters')) {
-          assignNested(filters, key.replace(/^filters\[/, '').replace(/\]$/, ''), value);
+          const cleanedKey = key.replace(/^filters\[/, '').replace(/^filters\./, '').replace(/\]$/, '');
+          assignNested(filters, cleanedKey, value);
         }
       }
 
@@ -77,8 +82,10 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
         sort: [{ [sortField]: sortDir?.toLowerCase() || 'asc' }],
         filters,
       };
-   // @ts-ignore
-      return await strapi.entityService.findMany(contentType, indexData);
+
+      // @ts-ignore
+      const data = await strapi.documents(contentType).findMany(indexData);
+      return data
     } catch (err) {
       strapi.log.error('Error in sortIndex:', err);
       return {};
