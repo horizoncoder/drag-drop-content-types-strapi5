@@ -1,71 +1,90 @@
+
 import type { Core } from '@strapi/strapi';
-import type * as StrapiTypes from '@strapi/types/dist';
+import type * as StrapiTypes from '@strapi/types';
 import { PluginSettingsResponse, RankUpdate } from '../../../typings';
 
-/**
- * @typedef {object} DragDropService
- * @property {() => { body: string }} getWelcomeMessage - Returns a welcome message.
- * @property {(contentType: StrapiTypes.UID.CollectionType, start: number, limit: number, locale: string, rankFieldName: string) => Promise<any>} sortIndex - Retrieves sorted index data for a content type.
- * @property {(config: PluginSettingsResponse, updates: RankUpdate[], contentType: StrapiTypes.UID.CollectionType) => Promise<any>} batchUpdate - Updates the rank of multiple entries in a content type.
- */
-
-/**
- * Drag Drop service.
- * @param {object} params - The parameters object.
- * @param {Core.Strapi} params.strapi - The Strapi instance.
- * @returns {DragDropService}
- */
 const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
-  /**
-   * Returns a welcome message.
-   * @returns {{ body: string }}
-   */
   getWelcomeMessage() {
     return {
       body: 'Welcome to Strapi 🚀',
     };
   },
 
-  /**
-   * Retrieves sorted index data for a content type.
-   * @async
-   * @param {StrapiTypes.UID.CollectionType} contentType - The content type UID.
-   * @param {number} start - The start index.
-   * @param {number} limit - The limit of results.
-   * @param {string} locale - The locale.
-   * @param {string} rankFieldName - The field name to sort by.
-   * @returns {Promise<any>}
-   */
   async sortIndex(
     contentType: StrapiTypes.UID.CollectionType,
-    start: number,
-    limit: number,
-    locale: string,
-    rankFieldName: string
+    _start: number,
+    _limit: number,
+    _locale: string,
+    rankFieldName: string,
+    url: string
   ) {
-    let indexData = {
-      sort: {},
-      populate: '*',
-      start: start,
-      limit: limit,
-      locale: locale,
-    };
-    indexData.sort[rankFieldName] = 'asc';
+    function assignNested(obj: any, path: string, value: any) {
+      const parts = path
+        .replace(/\]/g, '')
+        .split(/\[|\./)
+        .filter(Boolean);
+
+      let current = obj;
+      for (let i = 0; i < parts.length - 1; i++) {
+        const part = isNaN(Number(parts[i])) ? parts[i] : Number(parts[i]);
+        if (current[part] === undefined) {
+          current[part] = typeof parts[i + 1] === 'number' ? [] : {};
+        }
+        current = current[part];
+      }
+
+      const lastPart = isNaN(Number(parts[parts.length - 1]))
+        ? parts[parts.length - 1]
+        : Number(parts[parts.length - 1]);
+
+      current[lastPart] = value;
+    }
+
     try {
-      return await strapi.documents(contentType).findMany(indexData);
+      const queryString = url.split('?')[1] || '';
+      //@ts-ignore
+      const urlParams = new URLSearchParams(queryString);
+
+      let filters: any = {};
+      let sortValue = `${rankFieldName}:asc`;
+      let page = 1;
+      let pageSize = 20;
+      let locale = _locale;
+
+      for (const [key, value] of urlParams.entries()) {
+        if (key === 'sort') {
+          sortValue = value;
+        } else if (key === 'page') {
+          page = parseInt(value, 10);
+        } else if (key === 'pageSize') {
+          pageSize = parseInt(value, 10);
+        } else if (key === 'locale') {
+          locale = value;
+        } else if (key.startsWith('filters')) {
+          assignNested(filters, key.replace(/^filters\[/, '').replace(/\]$/, ''), value);
+        }
+      }
+
+      const start = (page - 1) * pageSize;
+      const limit = pageSize;
+      const [sortField, sortDir] = sortValue.split(':');
+
+      const indexData = {
+        populate: '*',
+        start,
+        limit,
+        locale,
+        sort: [{ [sortField]: sortDir?.toLowerCase() || 'asc' }],
+        filters,
+      };
+   // @ts-ignore
+      return await strapi.entityService.findMany(contentType, indexData);
     } catch (err) {
+      strapi.log.error('Error in sortIndex:', err);
       return {};
     }
   },
 
-  /**
-   * Updates the rank of multiple entries in a content type.
-   * @async
-   * @param {PluginSettingsResponse} config - The plugin settings.
-   * @param {RankUpdate[]} updates - The array of rank updates.
-   * @param {StrapiTypes.UID.CollectionType} contentType - The content type UID.
-   * @returns {Promise<any>}
-   */
   async batchUpdate(
     config: PluginSettingsResponse,
     updates: RankUpdate[],
@@ -100,8 +119,6 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
         }
       }
 
-      // Trigger webhook listener for updated entry
-      //see: https://forum.strapi.io/t/trigger-webhook-event-from-api/35919/5
       if (shouldTriggerWebhooks) {
         const info: Record<string, unknown> = {
           model: contentType.split('.').at(-1),
