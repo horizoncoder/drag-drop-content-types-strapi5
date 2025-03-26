@@ -67,17 +67,18 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
       }
 
       // special processing only for project.project
-      if (
-         !filters.$and ||
+  if (
+  contentType === 'api::project.project' &&
+  (
+    !filters.$and ||
     !Array.isArray(filters.$and) ||
     filters.$and.length !== 1 ||
     typeof filters.$and[0] !== 'object' ||
     !filters.$and[0].artist?.title?.$eq
-      ) {
-        return {
-          filters
-        };
-      }
+  )
+) {
+  return {};
+}
 
       if (
   contentType === 'api::new.new' &&
