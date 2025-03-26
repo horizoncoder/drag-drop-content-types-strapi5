@@ -100,9 +100,10 @@ const SortableList = ({ data, onShowMore, hasMore, settings, onSortEnd }: Sortab
       </DndContext>
       <Divider margin={0} />
       <Box padding={1}>
-        <Button size="S" disabled={hasMore ? true : false} onClick={onShowMore}>
+{/*         <Button size="S" disabled={hasMore ? true : false} onClick={onShowMore}>
           {formatMessage({ id: getTrad('plugin.settings.sortableList.showMore') })}
-        </Button>
+        </Button> */}
+        
         <p>Modified</p>
       </Box>
     </div>
