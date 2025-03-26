@@ -104,7 +104,7 @@ const SortableList = ({ data, onShowMore, hasMore, settings, onSortEnd }: Sortab
           {formatMessage({ id: getTrad('plugin.settings.sortableList.showMore') })}
         </Button> */}
         
-        <p>Modified</p>
+        <p>Modified V1.0.0</p>
       </Box>
     </div>
   );
