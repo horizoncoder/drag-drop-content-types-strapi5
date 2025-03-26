@@ -79,6 +79,17 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
         };
       }
 
+      if (
+  contentType === 'api::new.new' &&
+  Object.keys(filters).length > 0
+) {
+  return {};
+}
+if (contentType === 'api::artist.artist') {
+  return {};
+}
+
+
       const start = (page - 1) * pageSize;
       const limit = pageSize;
       const [sortField, sortDir] = sortValue.split(':');
