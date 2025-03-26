@@ -68,9 +68,11 @@ const dragdrop = ({ strapi }: { strapi: Core.Strapi }) => ({
 
       // special processing only for project.project
       if (
-        contentType === 'api::project.project' &&   !filters.$and?.some(
-          (cond: any) => cond.artist?.title?.$eq
-        )
+         !filters.$and ||
+    !Array.isArray(filters.$and) ||
+    filters.$and.length !== 1 ||
+    typeof filters.$and[0] !== 'object' ||
+    !filters.$and[0].artist?.title?.$eq
       ) {
         return {
           filters
