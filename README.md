@@ -1,3 +1,70 @@
+
+
+# Custom Drag-and-Drop Plugin for Project Positioning
+
+One of the core features of our project is the ability to reorder project positions both for artists and on the homepage. Since Strapi does not support this functionality out of the box, we explored existing community solutions.
+
+## Background
+
+We found an open-source plugin created by [yunusemrej](https://github.com/yunusemrej) – [`yunusemrejs/drag-drop-content-types-strapi5`](https://github.com/yunusemrej/drag-drop-content-types-strapi5). While it provided basic drag-and-drop functionality, it didn’t meet our project requirements for the following reasons:
+
+1. **Element Limit**: The plugin could only display up to 100 items.
+2. **No Filter Support**: It lacked filtering capabilities, which are essential for viewing projects associated with specific artists.
+
+## Our Solution
+
+We forked and modified the plugin to fit our use case. After customization, the plugin now supports:
+
+- Filtering by fields (e.g., filtering projects by artist).
+- Displaying **all items**, regardless of quantity.
+
+## How to Use
+
+### Home Page
+
+On the **Home page**, the plugin works **without filters**.  
+
+> ⚠️ Applying filters on this page may break the order logic and is therefore disabled.
+
+### Project Page
+
+On the **Project page**, the plugin works **only when the filter `artist is` is selected**.  
+This ensures that project reordering happens **only within the context of a single artist**, which helps maintain consistent order and avoids conflicts.
+
+Currently, the plugin is enabled for the **Home** and **Project** pages, but it can be extended to other pages if needed.
+
+## For Developers
+
+### API Logic
+
+The plugin uses the custom endpoint:
+
+```
+/sort-index
+```
+
+It handles data retrieval and sorting logic internally.
+
+To modify backend logic, check:
+
+```
+server/src/services/dragdrop.ts
+```
+
+### UI Logic
+
+To customize or update the admin UI, refer to:
+
+```
+admin/src/components
+```
+
+## Warnings
+
+- The plugin is designed to work with **Strapi v5.9.0**.
+- If you upgrade Strapi to a newer version, the plugin may stop functioning correctly.
+- In that case, additional adjustments will be required to make it compatible with the updated version of Strapi.
+
 <div align="center">
   <img src="https://user-images.githubusercontent.com/37687705/192227260-db082018-947a-4166-a3f4-983e1024dd59.png" width="20%">
   <h1>Strapi Drag Drop Content Types Plugin</h1>
@@ -131,72 +198,6 @@ query {
   }
 }
 ```
-
-# Custom Drag-and-Drop Plugin for Project Positioning
-
-One of the core features of our project is the ability to reorder project positions both for artists and on the homepage. Since Strapi does not support this functionality out of the box, we explored existing community solutions.
-
-## Background
-
-We found an open-source plugin created by [yunusemrej](https://github.com/yunusemrej) – [`yunusemrejs/drag-drop-content-types-strapi5`](https://github.com/yunusemrej/drag-drop-content-types-strapi5). While it provided basic drag-and-drop functionality, it didn’t meet our project requirements for the following reasons:
-
-1. **Element Limit**: The plugin could only display up to 100 items.
-2. **No Filter Support**: It lacked filtering capabilities, which are essential for viewing projects associated with specific artists.
-
-## Our Solution
-
-We forked and modified the plugin to fit our use case. After customization, the plugin now supports:
-
-- Filtering by fields (e.g., filtering projects by artist).
-- Displaying **all items**, regardless of quantity.
-
-## How to Use
-
-### Home Page
-
-On the **Home page**, the plugin works **without filters**.  
-
-> ⚠️ Applying filters on this page may break the order logic and is therefore disabled.
-
-### Project Page
-
-On the **Project page**, the plugin works **only when the filter `artist is` is selected**.  
-This ensures that project reordering happens **only within the context of a single artist**, which helps maintain consistent order and avoids conflicts.
-
-Currently, the plugin is enabled for the **Home** and **Project** pages, but it can be extended to other pages if needed.
-
-## For Developers
-
-### API Logic
-
-The plugin uses the custom endpoint:
-
-```
-/sort-index
-```
-
-It handles data retrieval and sorting logic internally.
-
-To modify backend logic, check:
-
-```
-server/src/services/dragdrop.ts
-```
-
-### UI Logic
-
-To customize or update the admin UI, refer to:
-
-```
-admin/src/components
-```
-
-## Warnings
-
-- The plugin is designed to work with **Strapi v5.9.0**.
-- If you upgrade Strapi to a newer version, the plugin may stop functioning correctly.
-- In that case, additional adjustments will be required to make it compatible with the updated version of Strapi.
-
 
 ## 📄 License
 
