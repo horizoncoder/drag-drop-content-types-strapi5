@@ -156,6 +156,7 @@ const SortModal = () => {
         );
         setPagination(data.pagination);
       }
+
     } catch (e) {
       console.log('Could not fetch content type', e);
       setStatus('error');
@@ -221,8 +222,15 @@ const SortModal = () => {
   };
 
   const showMoreHandler = () => {
-    setNoEntriesFromNextPage(noEntriesFromNextPage + listIncrementSize);
+    const entriesText = document.body.innerText.match(/(\d+)\s+entries\s+found/i);
+    if (!entriesText || entriesText.length < 2) return;
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set('pageSize',  entriesText[1]);
+    const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+    window.history.pushState(null, '', newUrl);
+    setNoEntriesFromNextPage(pageSize)
   };
+
 
   // Fetch content-type on page render
   useEffect(() => {

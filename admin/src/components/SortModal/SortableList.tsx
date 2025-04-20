@@ -1,4 +1,4 @@
-import { useState, useMemo, memo } from 'react';
+import {useState, useMemo, memo, useEffect} from 'react';
 import { GetPageEntriesResponse, SortableListProps } from './types';
 import { Divider, Button, Box } from '@strapi/design-system';
 import { useIntl } from 'react-intl';
@@ -37,8 +37,16 @@ const SortableList = ({ data, onShowMore, hasMore, settings, onSortEnd }: Sortab
     [title, subtitle, mainField]
   );
 
-  const defaultItems = data.map((x) => convertDataItem(x));
+const defaultItems = useMemo(() => {
+    return data.map((x) => convertDataItem(x));
+  }, [data, convertDataItem]);
+
   const [items, setItems] = useState<TItem[]>(defaultItems);
+
+  useEffect(() => {
+    setItems(defaultItems);
+  }, [defaultItems]);
+
   const itemsMap = useMemo(() => {
     const map = new Map<string, TItem>();
     items.forEach((item) => map.set(String(item.id), item));
@@ -92,18 +100,20 @@ const SortableList = ({ data, onShowMore, hasMore, settings, onSortEnd }: Sortab
         onDragEnd={handleDragEnd}
         onDragCancel={handleDragCancel}
       >
-        <SortableContext items={items}>
-          {items.map((item) => (
-            <SortableListItem key={item.id} item={item} />
-          ))}
-        </SortableContext>
+        <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+          <SortableContext items={items}>
+            {items.map((item) => (
+              <SortableListItem key={item.id} item={item} />
+            ))}
+          </SortableContext>
+        </div>
       </DndContext>
       <Divider margin={0} />
       <Box padding={1}>
-{/*         <Button size="S" disabled={hasMore ? true : false} onClick={onShowMore}>
+        <Button size="S" onClick={onShowMore}>
           {formatMessage({ id: getTrad('plugin.settings.sortableList.showMore') })}
-        </Button> */}
-        
+        </Button>
+
         <p>Modified V1.0.0</p>
       </Box>
     </div>
