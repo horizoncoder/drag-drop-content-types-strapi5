@@ -114,7 +114,7 @@ const defaultItems = useMemo(() => {
           {formatMessage({ id: getTrad('plugin.settings.sortableList.showMore') })}
         </Button>
 
-        <p>Modified V1.0.0</p>
+        <p>Modified V1.0.1</p>
       </Box>
     </div>
   );
